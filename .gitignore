@@ -127,3 +127,33 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# data
+data/bitcoin_alpha
+data/bitcoin_otc
+data/epinions
+data/slashdot
+data/SDSBM
+data/SSBM 
+data/polarized_SSBM
+
+# logs
+logs/
+node_logs/
+SDSBM_logs/
+Finance_logs/
+joblog/
+Output/
+link_results/debug/
+link_results/*/debug/
+node_results/debug/
+SDSBM_results/debug/
+Finance_results/debug/
+runs/
+node_runs/
+SDSBM_runs/
+Finance_runs/
+debug_SDSBM_runs/
+debug_node_runs/
+debug_runs/
+debug*runs/
