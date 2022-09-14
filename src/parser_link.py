@@ -15,7 +15,7 @@ def parameter_parser():
     parser.add_argument('--normalization', type=str, default='sym')
     parser.add_argument('--trainable_q', action='store_true')
     parser.add_argument('--emb_loss_coeff', type=float, default=0, help='Coefficient for the embedding loss term.')
-    parser.add_argument('--method', type=str, default='SLGNN')
+    parser.add_argument('--method', type=str, default='MSGNN')
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--hidden', type=int, default=16)
     parser.add_argument('--in_dim', type=int, default=20)

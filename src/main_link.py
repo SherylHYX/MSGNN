@@ -13,7 +13,7 @@ from torch_geometric_signed_directed.data import load_signed_real_data, SignedDa
 from torch_geometric_signed_directed.nn.signed import SGCN, SDGNN, SiGAT, SNEA
 from torch_geometric_signed_directed.utils.signed import link_sign_prediction_logistic_function
 
-from SLGNN import SLGNN_link_prediction
+from MSGNN import MSGNN_link_prediction
 from SSSNET_link_prediction import SSSNET_link_prediction
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(
         __file__)), 'SigMaNet'))
@@ -24,7 +24,7 @@ from parser_link import parameter_parser
 
 args = parameter_parser()
 
-def train_SLGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
+def train_MSGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
     model.train()
     out = model(X_real, X_img, edge_index=edge_index, 
                     query_edges=query_edges, 
@@ -36,7 +36,7 @@ def train_SLGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
     train_acc = metrics.accuracy_score(y.cpu(), out.max(dim=1)[1].cpu())
     return loss.detach().item(), train_acc
 
-def test_SLGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
+def test_MSGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
     model.eval()
     with torch.no_grad():
         out = model(X_real, X_img, edge_index=edge_index, 
@@ -139,7 +139,7 @@ sub_dir_name = 'runs' + str(args.runs) + 'epochs' + str(args.epochs) + \
         '1000lr' + str(int(1000*args.lr)) + '1000weight_decay' + str(int(1000*args.weight_decay)) + '100dropout' + str(int(100*args.dropout)) 
 if args.seed != 0:
     sub_dir_name += 'seed' + str(args.seed)
-if args.method == 'SLGNN':
+if args.method == 'MSGNN':
     suffix = 'K' + str(args.K) + '100q' + str(int(100*args.q)) + 'trainable_q' + str(args.trainable_q) + \
         '100emb' + str(int(100*args.emb_loss_coeff)) + 'hidden' + str(args.hidden)
     num_input_feat = 2
@@ -240,8 +240,8 @@ for split in list(link_data.keys()):
         model = SiGAT(nodes_num, edge_index_s, in_dim, out_dim).to(device)
     elif args.method == 'SDGNN':
         model = SDGNN(nodes_num, edge_index_s, in_dim, out_dim).to(device)
-    elif args.method == 'SLGNN':
-        model = SLGNN_link_prediction(q=args.q, K=args.K, num_features=num_input_feat, hidden=args.hidden, label_dim=2, \
+    elif args.method == 'MSGNN':
+        model = MSGNN_link_prediction(q=args.q, K=args.K, num_features=num_input_feat, hidden=args.hidden, label_dim=2, \
             trainable_q = args.trainable_q, dropout=args.dropout, normalization=args.normalization, cached=(not args.trainable_q)).to(device)
     elif args.method == 'SSSNET':
         model = SSSNET_link_prediction(nfeat=num_input_feat, hidden=args.hidden, nclass=2, dropout=args.dropout, 
@@ -258,13 +258,13 @@ for split in list(link_data.keys()):
 
     query_test_edges = link_data[split]['test']['edges']
     y_test = 1 - link_data[split]['test']['label']  
-    if args.method == 'SLGNN':
+    if args.method == 'MSGNN':
         for epoch in range(args.epochs):
-            train_loss, train_acc = train_SLGNN(X_real, X_img, y, edge_index, edge_weight, query_edges)
+            train_loss, train_acc = train_MSGNN(X_real, X_img, y, edge_index, edge_weight, query_edges)
             print(f'Split: {split:02d}, Epoch: {epoch:03d}, Train_Loss: {train_loss:.4f}, Train_Acc: {train_acc:.4f}')
             writer.add_scalar('train_loss_'+str(split), train_loss, epoch)
 
-        test_acc, f1, f1_macro, f1_micro, auc = test_SLGNN(X_real, X_img, y_test, edge_index, edge_weight, query_test_edges)
+        test_acc, f1, f1_macro, f1_micro, auc = test_MSGNN(X_real, X_img, y_test, edge_index, edge_weight, query_test_edges)
         print(f'Split: {split:02d}, Test_Acc: {test_acc:.4f}, F1: {f1:.4f}, F1 macro: {f1_macro:.4f}, \
             F1 micro: {f1_micro:.4f}, AUC: {auc:.4f}')
     elif args.method == 'SSSNET':
