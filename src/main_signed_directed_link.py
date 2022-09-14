@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 from sklearn import metrics
 import numpy as np
@@ -12,7 +13,7 @@ from torch_geometric_signed_directed.data import load_signed_real_data, SignedDa
 from torch_geometric_signed_directed.nn.signed import SGCN, SDGNN, SiGAT, SNEA
 
 from link_sign_direction_prediction_logistic_function import link_sign_direction_prediction_logistic_function
-from MSGNN import MSGNN_link_prediction
+from SLGNN import SLGNN_link_prediction
 from SSSNET_link_prediction import SSSNET_link_prediction
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(
         __file__)), 'SigMaNet'))
@@ -22,7 +23,7 @@ from parser_link import parameter_parser
 
 args = parameter_parser()
 
-def train_MSGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
+def train_SLGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
     model.train()
     out = model(X_real, X_img, edge_index=edge_index, 
                     query_edges=query_edges, 
@@ -34,7 +35,7 @@ def train_MSGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
     train_acc = metrics.accuracy_score(y.cpu(), out.max(dim=1)[1].cpu())
     return loss.detach().item(), train_acc
 
-def test_MSGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
+def test_SLGNN(X_real, X_img, y, edge_index, edge_weight, query_edges):
     model.eval()
     with torch.no_grad():
         out = model(X_real, X_img, edge_index=edge_index, 
@@ -130,7 +131,7 @@ sub_dir_name = 'runs' + str(args.runs) + 'epochs' + str(args.epochs) + \
         '1000lr' + str(int(1000*args.lr)) + '1000weight_decay' + str(int(1000*args.weight_decay)) + '100dropout' + str(int(100*args.dropout)) 
 if args.seed != 0:
     sub_dir_name += 'seed' + str(args.seed)
-if args.method == 'MSGNN':
+if args.method == 'SLGNN':
     suffix = 'K' + str(args.K) + '100q' + str(int(100*args.q)) + 'trainable_q' + str(args.trainable_q) + \
         'hidden' + str(args.hidden)
     num_input_feat = 2
@@ -179,7 +180,23 @@ if args.num_classes == 4:
 elif args.num_classes == 5:
     task = "five_class_signed_digraph"
 
-link_data = link_class_split(data, splits=args.runs, task=task, prob_val=args.val_ratio, prob_test=1-args.train_ratio-args.val_ratio, seed=args.seed, device=device)
+save_data_path_dir = os.path.join(os.path.dirname(os.path.realpath(
+        __file__)), '../data', args.dataset)
+if args.direction_only_task:
+    save_data_path = os.path.join(save_data_path_dir, task + '_direction_only' + str(device) + 'seed' + str(args.seed) + 'split' + str(args.runs) + '100val'+str(int(100*args.val_ratio)) + '100train' + str(int(100*args.train_ratio)) + '.pt')
+else:
+    save_data_path = os.path.join(save_data_path_dir, task + str(device) + 'seed' + str(args.seed) + 'split' + str(args.runs) + '100val'+str(int(100*args.val_ratio)) + '100train' + str(int(100*args.train_ratio)) + '.pt')
+if os.path.exists(save_data_path):
+    print('Loading existing data splits!')
+    link_data = torch.load(open(save_data_path, 'rb'))
+else:
+    link_data = link_class_split(data, splits=args.runs, task=task, prob_val=args.val_ratio, prob_test=1-args.train_ratio-args.val_ratio, seed=args.seed, device=device)
+    if os.path.isdir(save_data_path_dir) == False:
+        try:
+            os.makedirs(save_data_path_dir)
+        except FileExistsError:
+            print('Folder exists for {}!'.format(save_data_path_dir))
+    torch.save(link_data, save_data_path)
 if args.direction_only_task:
     task += '_direction_only'
     args.num_classes -= 2
@@ -189,14 +206,15 @@ in_dim = args.in_dim
 out_dim = args.out_dim
 
 
-
+start = time.time()
 criterion = nn.NLLLoss()
 res_array = np.zeros((args.runs, 3))
 for split in list(link_data.keys()):
     edge_index = link_data[split]['graph']
     edge_weight = link_data[split]['weights']
     edge_i_list = edge_index.t().cpu().numpy().tolist()
-    edge_s_list = edge_weight.long().cpu().numpy().tolist()
+    edge_weight_s = torch.where(edge_weight > 0, 1, -1)
+    edge_s_list = edge_weight_s.long().cpu().numpy().tolist()
     edge_index_s = torch.LongTensor([[i, j, s] for (i, j), s in zip(edge_i_list, edge_s_list)]).to(device)
     query_edges = link_data[split]['train']['edges']
     y = link_data[split]['train']['label']
@@ -225,14 +243,11 @@ for split in list(link_data.keys()):
     elif args.method == 'SNEA':
         model = SNEA(nodes_num, edge_index_s, in_dim, out_dim, layer_num=2, lamb=5).to(device)
     elif args.method == 'SiGAT':
-        if args.dataset[:6] != 'pvCLCL' and args.dataset[:4] != 'OPCL':
-            model = SiGAT(nodes_num, edge_index_s, in_dim, out_dim).to(device)
-        else:
-            model = SiGAT(nodes_num, edge_index_s, in_dim, out_dim, batch_size=300).to(device)
+        model = SiGAT(nodes_num, edge_index_s, in_dim, out_dim).to(device)
     elif args.method == 'SDGNN':
         model = SDGNN(nodes_num, edge_index_s, in_dim, out_dim).to(device)
-    elif args.method == 'MSGNN':
-        model = MSGNN_link_prediction(q=args.q, K=args.K, num_features=num_input_feat, hidden=args.hidden, label_dim=args.num_classes, \
+    elif args.method == 'SLGNN':
+        model = SLGNN_link_prediction(q=args.q, K=args.K, num_features=num_input_feat, hidden=args.hidden, label_dim=args.num_classes, \
             trainable_q = args.trainable_q, dropout=args.dropout, normalization=args.normalization, cached=(not args.trainable_q)).to(device)
     elif args.method == 'SSSNET':
         model = SSSNET_link_prediction(nfeat=num_input_feat, hidden=args.hidden, nclass=args.num_classes, dropout=args.dropout, 
@@ -252,13 +267,13 @@ for split in list(link_data.keys()):
     y_test = link_data[split]['test']['label']  
     if args.direction_only_task:
         y_test = torch.div(y_test, 2, rounding_mode='floor').to(device)
-    if args.method == 'MSGNN':
+    if args.method == 'SLGNN':
         for epoch in range(args.epochs):
-            train_loss, train_acc = train_MSGNN(X_real, X_img, y, edge_index, edge_weight, query_edges)
+            train_loss, train_acc = train_SLGNN(X_real, X_img, y, edge_index, edge_weight, query_edges)
             print(f'Split: {split:02d}, Epoch: {epoch:03d}, Train_Loss: {train_loss:.4f}, Train_Acc: {train_acc:.4f}')
             writer.add_scalar('train_loss_'+str(split), train_loss, epoch)
 
-        accuracy, f1_macro, f1_micro = test_MSGNN(X_real, X_img, y_test, edge_index, edge_weight, query_test_edges)
+        accuracy, f1_macro, f1_micro = test_SLGNN(X_real, X_img, y_test, edge_index, edge_weight, query_test_edges)
         print(f'Split: {split:02d}, Test_Acc: {accuracy:.4f}, F1 macro: {f1_macro:.4f}, \
             F1 micro: {f1_micro:.4f}.')
     elif args.method == 'SSSNET':
@@ -290,8 +305,10 @@ for split in list(link_data.keys()):
         print(f'Split: {split:02d}, '
             f'Accuracy: {accuracy:.4f}, MacroF1: {f1_macro:.4f}, MicroF1: {f1_micro:.4f}')
     res_array[split] = [accuracy, f1_macro, f1_micro]
-
+end = time.time()
+memory_usage = torch.cuda.max_memory_allocated(device)*1e-6
 print("{}'s average accuracy, MacroF1 and MicroF1: {}".format(args.method, res_array.mean(0)))
+print("{}'s total training and testing time: {}s, memory usage: {}M.".format(args.method, end-start, memory_usage))
 # save results
 if args.debug:
     dir_name = os.path.join(os.path.dirname(os.path.realpath(
@@ -307,3 +324,4 @@ if os.path.isdir(os.path.join(dir_name, sub_dir_name, args.method)) == False:
         print('Folder exists for {}!'.format(sub_dir_name, args.method))
 
 np.save(os.path.join(dir_name, sub_dir_name, args.method, suffix), res_array)
+np.save(os.path.join(dir_name, sub_dir_name, args.method, 'runtime_memory_' + suffix), np.array([end-start, memory_usage]))

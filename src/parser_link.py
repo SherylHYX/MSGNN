@@ -3,7 +3,7 @@ import argparse
 def parameter_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', type=str, default='bitcoin_alpha')
-    parser.add_argument('--epochs', type=int, default=200)
+    parser.add_argument('--epochs', type=int, default=300)
     parser.add_argument('--lr', type=float, default=1e-2)
     parser.add_argument('--year', type=int, default=2000)
     parser.add_argument('--num_classes', type=int, default=4, help='Number of classes.')
@@ -15,7 +15,7 @@ def parameter_parser():
     parser.add_argument('--normalization', type=str, default='sym')
     parser.add_argument('--trainable_q', action='store_true')
     parser.add_argument('--emb_loss_coeff', type=float, default=0, help='Coefficient for the embedding loss term.')
-    parser.add_argument('--method', type=str, default='MSGNN')
+    parser.add_argument('--method', type=str, default='SLGNN')
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--hidden', type=int, default=16)
     parser.add_argument('--in_dim', type=int, default=20)
