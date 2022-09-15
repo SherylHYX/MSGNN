@@ -21,7 +21,7 @@ argparse                        1.1.0
 sklearn                         0.23.2
 torch                           1.10.1
 torch-geometric                 2.0.3 (https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html)
-torch-geometric-signed-directed 0.8.0
+torch-geometric-signed-directed 0.22.0
 tensorboard                     2.4.0
 ```
 
