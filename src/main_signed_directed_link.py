@@ -134,26 +134,14 @@ if args.seed != 0:
 if args.method == 'MSGNN':
     suffix = 'K' + str(args.K) + '100q' + str(int(100*args.q)) + 'trainable_q' + str(args.trainable_q) + \
         'hidden' + str(args.hidden)
-    num_input_feat = 2
-    if args.sd_input_feat:
-        suffix += 'SdInput'
-        num_input_feat = 4
-    if args.weighted_input_feat:
-        suffix += 'WeightedInput'
-        if args.weighted_nonnegative_input_feat:
-            suffix += 'nonnegative'
 elif args.method == 'SigMaNet':
     suffix = 'K1_netflow'
-    num_input_feat = 2
-    if args.sd_input_feat:
-        suffix += 'SdInput'
-        num_input_feat = 4
-    if args.weighted_input_feat:
-        suffix += 'WeightedInput'
-        if args.weighted_nonnegative_input_feat:
-            suffix += 'nonnegative'
 elif args.method == 'SSSNET':
     suffix =  'hidden' + str(args.hidden) + 'hop' + str(args.hop) + '100tau' + str(int(100*args.tau))
+else:
+    suffix = 'in_dim' + str(args.in_dim) + 'out_dim' + str(args.out_dim)
+
+if args.method in ['SSSNET', 'SigMaNet', 'MSGNN']:
     num_input_feat = 2
     if args.sd_input_feat:
         suffix += 'SdInput'
@@ -162,8 +150,8 @@ elif args.method == 'SSSNET':
         suffix += 'WeightedInput'
         if args.weighted_nonnegative_input_feat:
             suffix += 'nonnegative'
-else:
-    suffix = 'in_dim' + str(args.in_dim) + 'out_dim' + str(args.out_dim)
+    if args.input_unweighted:
+        suffix += 'InputUnweighted'
 
 
 logs_folder_name = 'runs'
@@ -212,6 +200,8 @@ res_array = np.zeros((args.runs, 3))
 for split in list(link_data.keys()):
     edge_index = link_data[split]['graph']
     edge_weight = link_data[split]['weights']
+    if args.input_unweighted:
+        edge_weight = torch.where(edge_weight > 0, 1, -1)
     edge_i_list = edge_index.t().cpu().numpy().tolist()
     edge_weight_s = torch.where(edge_weight > 0, 1, -1)
     edge_s_list = edge_weight_s.long().cpu().numpy().tolist()

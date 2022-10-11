@@ -66,14 +66,26 @@ log_dir = os.path.join(os.path.dirname(os.path.realpath(
 writer = SummaryWriter(log_dir=log_dir+'/'+suffix)
 
 rnd.seed(args.seed)
-if args.dataset.lower() == '3c':
+if args.dataset.lower() == 'c3': # got a bug in the definition of F (density not uniform)
     args.K = 3
-    F = np.array([[0.5, args.gamma, -args.gamma], [1-args.gamma, 0.5, -0.5], [-1+args.gamma, -0.5, 0.5]])
+    F = np.array([[0.5, args.gamma, -args.gamma], [1-args.gamma, 0.5, -1+args.gamma], [-1+args.gamma, -1+args.gamma, 0.5]]) # np.array([[0.85, 0.1, 0.1], [0.9, 0.85, -0.8], [-0.9, -0.8, 0.85]])
+    F_plain = 2
+elif args.dataset.lower() == 'c4': # got a bug in the definition of F (sign flip)
+    args.K = 4
+    F = np.array([[0.5, args.gamma, -args.gamma, args.gamma], [1-args.gamma, 0.5, args.gamma, -0.5], [-1+args.gamma, -1+args.gamma, 0.5, -1+args.gamma], [-1+args.gamma, -0.5, -args.gamma, 0.5]])
+    F_plain = 4 # 2
+elif args.dataset.lower() == '3c':
+    args.K = 3
+    F = np.array([[0.5, args.gamma, -args.gamma], [1-args.gamma, 0.5, -0.5], [-1+args.gamma, -0.5, 0.5]]) # np.array([[0.85, 0.1, 0.1], [0.9, 0.85, -0.8], [-0.9, -0.8, 0.85]])
     F_plain = 2
 elif args.dataset.lower() == '4c':
     args.K = 4
     F = np.array([[0.5, args.gamma, -args.gamma, args.gamma], [1-args.gamma, 0.5, -args.gamma, -0.5], [-1+args.gamma, -1+args.gamma, 0.5, -1+args.gamma], [-1+args.gamma, -0.5, -args.gamma, 0.5]])
-    F_plain = 4
+    F_plain = 4 # 2
+elif args.dataset.lower() == 'syn4':
+    args.K = 4
+    F = np.array([[0.5, args.gamma, -args.gamma, args.gamma], [1-args.gamma, 0.5, -0.5, 0.5], [-1+args.gamma, -0.5, 0.5, -1+args.gamma], [1-args.gamma, 0.5, -args.gamma, 0.5]])
+    F_plain = 4 # 2
 syn_data_str = '1000p' + str(int(1000*args.p)) + 'K' + str(args.K) + '100eta' + str(int(100*args.eta))  + '100gamma' + str(int(100*args.gamma)) + '10rho' + str(int(10*args.size_ratio)) + 'N' + str(args.N)
 args.dataset = 'SDSBM/' + args.dataset.lower() + '/' + syn_data_str
 save_path = os.path.join(os.path.dirname(os.path.realpath(
