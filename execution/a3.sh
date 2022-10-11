@@ -1,7 +1,13 @@
 cd ../src/
 
-../../parallel -j3 --resume-failed --results ../Output/3afinance_link --joblog ../joblog/3afinance_link_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --direction_only_task --sd_input_feat --weighted_input_feat --year {1}  --runs 5 --dataset OPCL --method MSGNN --num_classes 4 --q 0.25 ::: {2000..2020}
+../../parallel -j2 --resume-failed --results ../Output/3_A_bitcoin_slashdot_link_direction --joblog ../joblog/3_A_bitcoin_slashdot_link_direction_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --direction_only_task --num_classes 4 --sd_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
 
-../../parallel -j2 --resume-failed --results ../Output/3a_bitcoin_direction_only_link --joblog ../joblog/3a_bitcoin_direction_only_link_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --direction_only_task --sd_input_feat --weighted_input_feat --dataset bitcoin_otc --runs 5 --method MSGNN --num_classes {1} --q 0.25 ::: 4 5
+../../parallel -j2 --resume-failed --results ../Output/3_B_bitcoin_slashdot_link_direction --joblog ../joblog/3_B_bitcoin_slashdot_link_direction_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --direction_only_task --num_classes 4  --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
 
-../../parallel -j2 --resume-failed --results ../Output/3a_bitcoin_link --joblog ../joblog/3a_bitcoin_link_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --sd_input_feat --weighted_input_feat --dataset bitcoin_otc --runs 5 --method MSGNN --num_classes {1} --q 0.25 ::: 4 5
+../../parallel -j2 --resume-failed --results ../Output/3_C_bitcoin_slashdot_link_direction --joblog ../joblog/3_C_bitcoin_slashdot_link_direction_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --direction_only_task --num_classes 4 --sd_input_feat  --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/3_D_bitcoin_slashdot_link_direction --joblog ../joblog/3_D_bitcoin_slashdot_link_direction_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --direction_only_task --num_classes 4 --weighted_nonnegative_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/3_E_bitcoin_slashdot_link_direction --joblog ../joblog/3_E_bitcoin_slashdot_link_direction_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --direction_only_task --num_classes 4 --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/3_F_bitcoin_slashdot_link_direction --joblog ../joblog/3_F_bitcoin_slashdot_link_direction_joblog CUDA_VISIBLE_DEVICES=3 python ./main_signed_directed_link.py --direction_only_task --num_classes 4 --sd_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.05 0.1 0.15 0.2

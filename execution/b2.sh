@@ -1,5 +1,13 @@
 cd ../src/
 
-../../parallel -j3 --resume-failed --results ../Output/2bfinance_link --joblog ../joblog/2bfinance_link_joblog CUDA_VISIBLE_DEVICES=2 python ./main_signed_directed_link.py --sd_input_feat --weighted_input_feat --year {1}  --runs 5 --dataset OPCL --method MSGNN --num_classes 5 --q 0.25 ::: {2000..2020}
+../../parallel -j2 --resume-failed --results ../Output/2_A_bitcoin_epinions_link_sign_direction --joblog ../joblog/2_A_bitcoin_epinions_link_sign_direction_joblog CUDA_VISIBLE_DEVICES=2 python ./main_signed_directed_link.py --num_classes 5 --sd_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: epinions bitcoin_alpha ::: 0.25 0
 
-../../parallel -j1 --resume-failed --results ../Output/b2_link_sign --joblog ../joblog/b2_link_sign_joblog CUDA_VISIBLE_DEVICES=2 python ./main_link.py --sd_input_feat --weighted_input_feat --method MSGNN --q 0 --dataset {1} ::: bitcoin_otc slashdot
+../../parallel -j2 --resume-failed --results ../Output/2_B_bitcoin_epinions_link_sign_direction --joblog ../joblog/2_B_bitcoin_epinions_link_sign_direction_joblog CUDA_VISIBLE_DEVICES=2 python ./main_signed_directed_link.py --num_classes 5  --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: epinions bitcoin_alpha ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/2_C_bitcoin_epinions_link_sign_direction --joblog ../joblog/2_C_bitcoin_epinions_link_sign_direction_joblog CUDA_VISIBLE_DEVICES=2 python ./main_signed_directed_link.py --num_classes 5 --sd_input_feat  --dataset {1} --runs 5 --method MSGNN  --q {2} ::: epinions bitcoin_alpha ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/2_D_bitcoin_epinions_link_sign_direction --joblog ../joblog/2_D_bitcoin_epinions_link_sign_direction_joblog CUDA_VISIBLE_DEVICES=2 python ./main_signed_directed_link.py --num_classes 5 --weighted_nonnegative_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: epinions bitcoin_alpha ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/2_E_bitcoin_epinions_link_sign_direction --joblog ../joblog/2_E_bitcoin_epinions_link_sign_direction_joblog CUDA_VISIBLE_DEVICES=2 python ./main_signed_directed_link.py --num_classes 5 --dataset {1} --runs 5 --method MSGNN  --q {2} ::: epinions bitcoin_alpha ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/2_F_bitcoin_epinions_link_sign_direction --joblog ../joblog/2_F_bitcoin_epinions_link_sign_direction_joblog CUDA_VISIBLE_DEVICES=2 python ./main_signed_directed_link.py --num_classes 5 --sd_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: epinions bitcoin_alpha ::: 0.05 0.1 0.15 0.2

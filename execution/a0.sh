@@ -1,3 +1,13 @@
 cd ../src/
 
-../../parallel -j3 --resume-failed --results ../Output/a0SDSBM_gamma --joblog ../joblog/a0_gamma_joblog CUDA_VISIBLE_DEVICES=0 python ./main_SDSBM_node.py --sd_input_feat --weighted_input_feat --N 1000 --size_ratio 1.5 --seed {1}  --runs 2 --p {2} --eta 0 --gamma {3} --dataset {4} --method MSGNN --supervised_loss_ratio 50 --imbalance_loss_ratio 1 --pbnc_loss_ratio {5} --q 0.25 ::: 10 20 30 40 50 ::: 0.1 1 ::: 0 0.05 0.1 ::: 3c 4c ::: 1 0
+../../parallel -j2 --resume-failed --results ../Output/0_A_bitcoin_slashdot_link_sign --joblog ../joblog/0_A_bitcoin_slashdot_link_sign_joblog CUDA_VISIBLE_DEVICES=0 python ./main_link.py --sd_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/0_B_bitcoin_slashdot_link_sign --joblog ../joblog/0_B_bitcoin_slashdot_link_sign_joblog CUDA_VISIBLE_DEVICES=0 python ./main_link.py  --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/0_C_bitcoin_slashdot_link_sign --joblog ../joblog/0_C_bitcoin_slashdot_link_sign_joblog CUDA_VISIBLE_DEVICES=0 python ./main_link.py --sd_input_feat  --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/0_D_bitcoin_slashdot_link_sign --joblog ../joblog/0_D_bitcoin_slashdot_link_sign_joblog CUDA_VISIBLE_DEVICES=0 python ./main_link.py --weighted_nonnegative_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/0_E_bitcoin_slashdot_link_sign --joblog ../joblog/0_E_bitcoin_slashdot_link_sign_joblog CUDA_VISIBLE_DEVICES=0 python ./main_link.py --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.25 0
+
+../../parallel -j2 --resume-failed --results ../Output/0_F_bitcoin_slashdot_link_sign --joblog ../joblog/0_F_bitcoin_slashdot_link_sign_joblog CUDA_VISIBLE_DEVICES=0 python ./main_link.py --sd_input_feat --weighted_input_feat --dataset {1} --runs 5 --method MSGNN  --q {2} ::: slashdot bitcoin_otc ::: 0.05 0.1 0.15 0.2
