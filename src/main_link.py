@@ -160,6 +160,12 @@ if args.method in ['SSSNET', 'SigMaNet', 'MSGNN']:
             suffix += 'nonnegative'
     if args.input_unweighted:
         suffix += 'InputUnweighted'
+if args.method == 'MSGNN':
+    if args.normalization == 'None':
+        args.normalization = None
+        suffix += 'no_norm'
+    if args.num_layers != 2:
+        suffix += 'num_layers' + str(args.num_layers)
 
 logs_folder_name = 'runs'
 if args.debug: 
@@ -230,7 +236,7 @@ for split in list(link_data.keys()):
         model = SDGNN(nodes_num, edge_index_s, in_dim, out_dim).to(device)
     elif args.method == 'MSGNN':
         model = MSGNN_link_prediction(q=args.q, K=args.K, num_features=num_input_feat, hidden=args.hidden, label_dim=2, \
-            trainable_q = args.trainable_q, dropout=args.dropout, normalization=args.normalization, cached=(not args.trainable_q)).to(device)
+            trainable_q = args.trainable_q, layer=args.num_layers, dropout=args.dropout, normalization=args.normalization, cached=(not args.trainable_q)).to(device)
     elif args.method == 'SSSNET':
         model = SSSNET_link_prediction(nfeat=num_input_feat, hidden=args.hidden, nclass=2, dropout=args.dropout, 
         hop=args.hop, fill_value=args.tau, directed=data.is_directed).to(device)

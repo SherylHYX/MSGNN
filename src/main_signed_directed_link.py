@@ -152,6 +152,12 @@ if args.method in ['SSSNET', 'SigMaNet', 'MSGNN']:
             suffix += 'nonnegative'
     if args.input_unweighted:
         suffix += 'InputUnweighted'
+if args.method == 'MSGNN':
+    if args.normalization == 'None':
+        args.normalization = None
+        suffix += 'no_norm'
+    if args.num_layers != 2:
+        suffix += 'num_layers' + str(args.num_layers)
 
 
 logs_folder_name = 'runs'
@@ -202,6 +208,9 @@ for split in list(link_data.keys()):
     edge_weight = link_data[split]['weights']
     if args.input_unweighted:
         edge_weight = torch.where(edge_weight > 0, 1, -1)
+    if args.q in [11, 22, 33, 44, 55]:
+        curr_graph = SignedData(edge_index=edge_index, edge_weight=edge_weight)
+        args.q = args.q/55 * 0.5/(curr_graph.A - curr_graph.A.transpose()).max()
     edge_i_list = edge_index.t().cpu().numpy().tolist()
     edge_weight_s = torch.where(edge_weight > 0, 1, -1)
     edge_s_list = edge_weight_s.long().cpu().numpy().tolist()
@@ -238,7 +247,7 @@ for split in list(link_data.keys()):
         model = SDGNN(nodes_num, edge_index_s, in_dim, out_dim).to(device)
     elif args.method == 'MSGNN':
         model = MSGNN_link_prediction(q=args.q, K=args.K, num_features=num_input_feat, hidden=args.hidden, label_dim=args.num_classes, \
-            trainable_q = args.trainable_q, dropout=args.dropout, normalization=args.normalization, cached=(not args.trainable_q)).to(device)
+            trainable_q = args.trainable_q, layer=args.num_layers, dropout=args.dropout, normalization=args.normalization, cached=(not args.trainable_q)).to(device)
     elif args.method == 'SSSNET':
         model = SSSNET_link_prediction(nfeat=num_input_feat, hidden=args.hidden, nclass=args.num_classes, dropout=args.dropout, 
         hop=args.hop, fill_value=args.tau, directed=data.is_directed).to(device)
