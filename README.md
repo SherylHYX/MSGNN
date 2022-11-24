@@ -3,6 +3,8 @@ MSGNN: A Spectral Graph Neural Network Based on a Novel Magnetic Signed Laplacia
 
 For details, please read [our paper](https://arxiv.org/pdf/2209.00546.pdf).
 
+MSGNN is also implemented in the [PyTorch Geometric Signed Directed](https://github.com/SherylHYX/pytorch_geometric_signed_directed) library.
+
 **Citing**
 
 
