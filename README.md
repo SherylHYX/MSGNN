@@ -1,5 +1,23 @@
 # MSGNN
-A Graph Neural Network Based on a Novel Magnetic Signed Laplacian
+MSGNN: A Spectral Graph Neural Network Based on a Novel Magnetic Signed Laplacian (LoG 2022)
+
+For details, please read [our paper](https://arxiv.org/pdf/2209.00546.pdf).
+
+**Citing**
+
+
+If you find MSGNN useful in your research, please consider adding the following citation:
+
+```bibtex
+@article{he2022msgnn,
+  title={MSGNN: A Spectral Graph Neural Network Based on a Novel Magnetic Signed Laplacian},
+  author={He, Yixuan and Permultter, Michael and Reinert, Gesine and Cucuringu, Mihai},
+  journal={arXiv preprint arXiv:2209.00546},
+  year={2022}
+}
+```
+
+--------------------------------------------------------------------------------
 
 ## Environment Setup
 ### Overview
