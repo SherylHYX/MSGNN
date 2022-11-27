@@ -46,7 +46,7 @@ tensorboard                     2.4.0
 ```
 
 ## Folder structure
-- ./execution/ stores files that can be executed to generate outputs. For vast number of experiments, we use parallel (https://www.gnu.org/software/parallel/, can be downloaded in command line and make it executable via:
+- ./execution/ stores files that can be executed to generate outputs. For vast number of experiments, we use [parallel](https://www.gnu.org/software/parallel/), can be downloaded in command line and make it executable via:
 ```
 wget http://git.savannah.gnu.org/cgit/parallel.git/plain/src/parallel
 chmod 755 ./parallel
@@ -112,6 +112,6 @@ python ./main_signed_directed_link.py --dataset OPCL --year 2016 --cpu --num_cla
 ```
 
 ## Note
-- The convention of the definition of the K parameter needs a bit of attention: in the paper, K denotes the degree of the Chebyshev polynomial, while in the code implmentation, K denotes the size of the Chebyshev filter (followed from the Cheb_conv definition from PyTorch Geometric). Therefore, though we have by defualt K=1 as stated in our paper, this default means K=2 in our code.
+- The convention of the definition of the K parameter needs a bit of attention: in the paper, K denotes the degree of the Chebyshev polynomial, while in the code implmentation, K denotes the size of the Chebyshev filter (followed from the [Cheb_conv definition from PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html#torch_geometric.nn.conv.ChebConv)). Therefore, though we have by defualt K=1 as stated in our paper, this default means K=2 in our code.
 
 --------------------------------------------------------------------------------
