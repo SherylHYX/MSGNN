@@ -110,3 +110,8 @@ Creating a model for the FiLL-OPCL data set in the year 2016 on the link predict
 ```
 python ./main_signed_directed_link.py --dataset OPCL --year 2016 --cpu --num_classes 5 --direction_only_task --method SDGNN
 ```
+
+## Note
+- The convention of the definition of the K parameter needs a bit of attention: in the paper, K denotes the degree of the Chebyshev polynomial, while in the code implmentation, K denotes the size of the Chebyshev filter (followed from the Cheb_conv definition from PyTorch Geometric). Therefore, though we have by defualt K=1 as stated in our paper, this default means K=2 in our code.
+
+--------------------------------------------------------------------------------
