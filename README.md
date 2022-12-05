@@ -1,7 +1,7 @@
 # MSGNN
 MSGNN: A Spectral Graph Neural Network Based on a Novel Magnetic Signed Laplacian (LoG 2022)
 
-For details, please read [our paper](https://arxiv.org/pdf/2209.00546.pdf).
+For details, please read [our paper](https://arxiv.org/pdf/2209.00546.pdf). You are also welcome to read our [poster](https://github.com/SherylHYX/MSGNN/blob/main/LoG2022_MSGNN_poster.pdf).
 
 MSGNN is also implemented in the [PyTorch Geometric Signed Directed](https://github.com/SherylHYX/pytorch_geometric_signed_directed) library.
 
