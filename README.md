@@ -11,11 +11,13 @@ MSGNN is also implemented in the [PyTorch Geometric Signed Directed](https://git
 If you find MSGNN useful in your research, please consider adding the following citation:
 
 ```bibtex
-@article{he2022msgnn,
+@inproceedings{he2022msgnn,
   title={MSGNN: A Spectral Graph Neural Network Based on a Novel Magnetic Signed Laplacian},
-  author={He, Yixuan and Permultter, Michael and Reinert, Gesine and Cucuringu, Mihai},
-  journal={arXiv preprint arXiv:2209.00546},
-  year={2022}
+  author={He, Yixuan and Perlmutter, Michael and Reinert, Gesine and Cucuringu, Mihai},
+  booktitle={Learning on Graphs Conference},
+  pages={40--1},
+  year={2022},
+  organization={PMLR}
 }
 ```
 

@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "Please cite our paper if you find our work useful in your research."
-title: "MSGNN: A Spectral Graph Neural Network Based on a Novel Magnetic Signed Laplacian"
+title: "DIGRAC: Digraph Clustering Based on Flow Imbalance"
 authors:
 - family-names: "He"
   given-names: "Yixuan"
@@ -23,6 +23,8 @@ preferred-citation:
     given-names: "Gesine"
   - family-names: "Cucuringu"
     given-names: "Mihai"
-  journal: "arXiv preprint arXiv:2209.00546"
+  journal: "Proceedings of the First Learning on Graphs Conference, PMLR 198"
   title: "MSGNN: A Spectral Graph Neural Network Based on a Novel Magnetic Signed Laplacian"
   year: 2022
+  start: 40
+  end: 1
