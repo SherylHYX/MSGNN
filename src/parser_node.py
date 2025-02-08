@@ -5,7 +5,7 @@ def parameter_parser():
     parser.add_argument('--dataset', type=str, default='SSBM')
     parser.add_argument('--epochs', type=int, default=1000)
     parser.add_argument('--lr', type=float, default=1e-2)
-    parser.add_argument('--K_model', type=int, default=2)
+    parser.add_argument('--K_model', type=int, default=1)
     parser.add_argument('--q', type=float, default=0)
     parser.add_argument('--weight_decay', type=float, default=0.0005)
     parser.add_argument('--dropout', type=float, default=0.5)
