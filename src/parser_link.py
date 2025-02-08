@@ -8,7 +8,7 @@ def parameter_parser():
     parser.add_argument('--year', type=int, default=2000)
     parser.add_argument('--num_classes', type=int, default=4, help='Number of classes.')
     parser.add_argument('--direction_only_task', action='store_true', help='Whether to degrade the task to consider direction only.')
-    parser.add_argument('--K', type=int, default=2)
+    parser.add_argument('--K', type=int, default=1)
     parser.add_argument('--q', type=float, default=0, help='55 means 0.5/max_{i,j}(A_{i,j} - A_{j,i}), 11, 22, 33 and 44 takes 1/5, 1/5, 3/5, 4/5 of this amount.')
     parser.add_argument('--weight_decay', type=float, default=0.0005)
     parser.add_argument('--dropout', type=float, default=0.5)
