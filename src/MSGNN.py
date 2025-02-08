@@ -13,7 +13,7 @@ class MSGNN_link_prediction(nn.Module):
     Args:
         num_features (int): Size of each input sample.
         hidden (int, optional): Number of hidden channels.  Default: 2.
-        K (int, optional): Order of the Chebyshev polynomial.  Default: 2.
+        K (int, optional): Order of the Chebyshev polynomial.  Default: 1.
         q (float, optional): Initial value of the phase parameter, 0 <= q <= 0.25. Default: 0.25.
         label_dim (int, optional): Number of output classes.  Default: 2.
         activation (bool, optional): whether to use activation function or not. (default: :obj:`True`)
@@ -34,7 +34,7 @@ class MSGNN_link_prediction(nn.Module):
             learning scenarios. (default: :obj:`False`)
         absolute_degree (bool, optional): Whether to calculate the degree matrix with respect to absolute entries of the adjacency matrix. (default: :obj:`True`)
     """
-    def __init__(self, num_features:int, hidden:int=2, q:float=0.25, K:int=2, label_dim:int=2, \
+    def __init__(self, num_features:int, hidden:int=2, q:float=0.25, K:int=1, label_dim:int=2, \
         activation:bool=True, trainable_q:bool=False, layer:int=2, dropout:float=0.5, normalization:str='sym', cached: bool=False, absolute_degree: bool=True):
         super(MSGNN_link_prediction, self).__init__()
 
@@ -93,7 +93,7 @@ class MSGNN_node_classification(nn.Module):
     Args:
         num_features (int): Size of each input sample.
         hidden (int, optional): Number of hidden channels.  Default: 2.
-        K (int, optional): Order of the Chebyshev polynomial.  Default: 2.
+        K (int, optional): Order of the Chebyshev polynomial.  Default: 1.
         q (float, optional): Initial value of the phase parameter, 0 <= q <= 0.25. Default: 0.25.
         label_dim (int, optional): Number of output classes.  Default: 2.
         activation (bool, optional): whether to use activation function or not. (default: :obj:`False`)
@@ -115,7 +115,7 @@ class MSGNN_node_classification(nn.Module):
             learning scenarios. (default: :obj:`False`)
         absolute_degree (bool, optional): Whether to calculate the degree matrix with respect to absolute entries of the adjacency matrix. (default: :obj:`True`)
     """
-    def __init__(self, num_features:int, hidden:int=2, q:float=0.25, K:int=2, label_dim:int=2, \
+    def __init__(self, num_features:int, hidden:int=2, q:float=0.25, K:int=1, label_dim:int=2, \
         activation:bool=False, trainable_q:bool=False, layer:int=2, dropout:float=False, normalization:str='sym', cached: bool=False, absolute_degree: bool=True):
         super(MSGNN_node_classification, self).__init__()
 
